@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Katplay</title>
+  <script src="https://www.google.com/recaptcha/api.js?render=6LcegE4rAAAAAMCkuv8oTaiA78vzRqivsQrdwioD"></script>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #fff;
+      font-family: Arial, sans-serif;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background-color: #ff0051;
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+    }
+    header a {
+      color: white;
+      text-decoration: underline;
+      transition: color 0.3s ease;
+    }
+    header a:hover {
+      color: #ff80a0;
+    }
+    main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+      animation: fadeIn 1s ease forwards;
+      opacity: 0;
+    }
+    main ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 1rem 0;
+    }
+    main ul li {
+      margin: 0.3rem 0;
+    }
+    form {
+      text-align: left;
+      margin-top: 2rem;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    input[type="text"], input[type="email"], textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      resize: vertical;
+      transition: border-color 0.3s ease;
+    }
+    input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+      border-color: #ff0051;
+      outline: none;
+    }
+    textarea {
+      min-height: 100px;
+    }
+    input[type="submit"] {
+      margin-top: 1.5rem;
+      background-color: #ff0051;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 8px rgb(255 0 81 / 0.3);
+    }
+    input[type="submit"]:hover:not(:disabled) {
+      background-color: #ff3380;
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgb(255 0 81 / 0.5);
+    }
+    input[type="submit"]:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+      box-shadow: none;
+      transform: none;
+    }
+    footer {
+      background: #f8f8f8;
+      padding: 10px 0;
+      font-size: 14px;
+      color: #555;
+      margin-top: auto;
+    }
+    .footer-container {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      text-align: center;
+    }
+    .footer-item {
+      white-space: nowrap;
+    }
+    .separator {
+      user-select: none;
+      color: #999;
+    }
+    footer a {
+      color: #555;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    footer a:hover {
+      text-decoration: underline;
+      color: #ff0051;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+    @media (max-width: 600px) {
+      .footer-container {
+        flex-direction: column;
+        gap: 5px;
+      }
+      .separator {
+        display: none;
+      }
+      header {
+        padding: 1.5rem 1rem;
+        font-size: 1.1rem;
+      }
+      header h1 {
+        font-size: 1.8rem;
+      }
+      header p {
+        font-size: 1.1rem;
+      }
+      main {
+        padding: 1.5rem 1rem;
+      }
+      main h2 {
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+      }
+      main p {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+      }
+      a {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Welcome to Katplay</h1>
+    <p><em>Born to Kat, built to play.</em></p>
+    <p><a href="https://play.google.com/store/apps/developer?id=katplay" target="_blank" rel="noopener noreferrer">Visit Katplay's Google Play Store</a></p>
+  </header>
+
+  <main>
+    <h2><strong>We build, we play, we reskin.</strong></h2>
+    <p>
+      Katplay is an indie team creating hyper-casual and casual mobile games with Unity.<br />
+      We focus on:
+    </p>
+    <ul>
+      <li>• Fast prototypes</li>
+      <li>• Full game development</li>
+      <li>• Playable ads</li>
+      <li>• Game reskin for Unity projects</li>
+    </ul>
+    <p>
+      We’ve collaborated with publishers like Voodoo, Lion Studios, Homa Games, ZPlay, and OneSoft — with games reaching millions of downloads.
+    </p>
+    <p><strong>Got an idea? Need a reskin?<br />Let’s make it playable.</strong></p>
+
+    <h2>Contact Us</h2>
+    <form id="contactForm">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required placeholder="Your Name" />
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required placeholder="your.email@example.com" />
+
+      <label for="message">Message:</label>
+      <textarea id="message" name="message" required placeholder="Write your message here..."></textarea>
+
+      <!-- Honeypot field -->
+      <input type="text" name="honeypot" style="display:none" tabindex="-1" autocomplete="off" />
+
+      <input type="submit" value="Send Message" />
+    </form>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-item footer-left">&copy; 2025 Katplay</div>
+      <div class="separator">|</div>
+      <div class="footer-item footer-center">
+        <a href="https://katplay.fun/privacy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+      </div>
+      <div class="separator">|</div>
+      <div class="footer-item footer-right">
+        Contact: <a href="mailto:hellokatplay@gmail.com">hellokatplay@gmail.com</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('contactForm');
+    const submitBtn = form.querySelector('input[type="submit"]');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const name = this.name.value.trim();
+      const email = this.email.value.trim();
+      const message = this.message.value.trim();
+      const honeypot = this.honeypot.value.trim();
+
+      if (honeypot) {
+        console.warn("Spam bot detected. Submission ignored.");
+        return;
+      }
+
+      if (!name || !email || !message) {
+        alert('Please fill all the fields.');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.value = 'Sending...';
+
+      grecaptcha.ready(function() {
+        grecaptcha.execute('6LcegE4rAAAAAMCkuv8oTaiA78vzRqivsQrdwioD', {action: 'submit'}).then(function(token) {
+          const payload = { name, email, message, token };
+
+          fetch('https://script.google.com/macros/s/AKfycbwNiGni9mUMevGVHXqwfuFgdq80XmqYHepYlATFxbVcOEnbP3lkIbqM4wXV6eb-dBSI/exec', {
+            redirect: 'follow',
+            method: 'POST',
+            mode: 'cors',
+            body: JSON.stringify(payload),
+            headers: {
+              'Content-Type': 'text/plain;charset=utf-8'
+            }
+          })
+          .then(response => response.text())
+          .then(data => {
+            console.log('Server returned:', data);
+            alert('Thank you, ' + name + '! Your message has been received.');
+            form.reset();
+            submitBtn.disabled = false;
+            submitBtn.value = 'Send Message';
+          })
+          .catch(error => {
+            console.error('Fetch error:', error);
+            alert('Error sending message. Please try again.');
+            submitBtn.disabled = false;
+            submitBtn.value = 'Send Message';
+          });
+        });
+      });
+    });
+  </script>
+</body>
+</html>
