@@ -1,0 +1,112 @@
+
+*{
+  font-family: 'Work Sans', sans-serif;
+}
+
+.font-special {
+  font-family: 'Pacifico', cursive;
+}
+.game-title {
+  font-family: 'Acme', sans-serif;
+}
+body {
+  padding-top: 0px;
+}
+
+.topnav {
+  background-color: rgb(44, 44, 44);
+  overflow: hidden;
+}
+
+/* Style navbar*/
+.topnav a {
+float: left;
+color: #f2f2f2;
+text-align: center;
+padding: 14px 16px;
+text-decoration: none;
+font-size: 17px;
+}
+
+
+.topnav-right {
+float: right;
+position: absolute; 
+right:4rem; 
+top:0.5rem;
+}
+
+/*Style video background */
+.jumbotron-customize {
+  position: relative;
+  overflow: hidden;
+  background-color:black;
+}
+.jumbotron-customize video {
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  width:100%;
+  height:100%;
+  /*  object-fit is not supported on IE  */
+  object-fit: cover;
+  opacity:0.5;
+}
+.jumbotron-customize .container {
+  z-index: 2;
+  position: relative;
+}
+
+.float-right {
+  float: right !important;
+}
+
+.game-section {
+  background-color:  rgb(0, 0, 0); /* For browsers that do not support gradients */
+  background-image: linear-gradient(to right, rgb(0, 0, 0), rgb(71, 67, 61), rgb(54, 54, 42)); /* Standard syntax (must be last) */
+}
+.round {
+  border-radius: 5%;
+}
+
+.orange-deco {
+  color: orange;
+}
+
+a[class^="fa"]:before {
+	display: inline-block;
+	text-decoration: none;
+}
+
+.nav-font-size {
+  font-size: 1rem;
+}
+
+.content-color {
+  background-color: rgb(242, 242, 242);
+}
+
+.title-decorate {
+  border-bottom: solid 2px whitesmoke;
+}
+
+.offer {
+  list-style-type: none;
+}
+
+.border-service {
+  border-radius: 1rem;
+  background-color: rgb(255, 255, 255);
+  margin-bottom: 1.5rem;
+}
+/* Animation download button */
+.common-store {
+  -webkit-transition: all 0.3s;
+  transition: all 0.3s
+}
+.common-store:hover img{
+  -webkit-transform: scale(1.05);
+      -ms-transform: scale(1.05);
+          transform: scale(1.05); 
+}
+

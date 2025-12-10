@@ -1,0 +1,28 @@
+{
+  "websiteUrl": "https://logcat.team",
+  "androidStoreUrl": "https://assetstore.unity.com/publishers/50521",
+  "iosStoreUrl": "https://assetstore.unity.com/publishers/50521",
+  "apps": [
+    {
+      "id": "get13puzzle",
+      "weight": "1",
+      "videoUrl": "https://logcat.team/crosspromo/get13puzzle.mp4",
+      "androidUrl": "https://assetstore.unity.com/packages/slug/324146",
+      "iosUrl": "https://assetstore.unity.com/packages/slug/324146"
+    },
+    {
+      "id": "tictactoe",
+      "weight": "2",
+      "videoUrl": "https://logcat.team/crosspromo/tictactoe.mp4",
+      "androidUrl": "https://assetstore.unity.com/packages/slug/317201",
+      "iosUrl": "https://assetstore.unity.com/packages/slug/317201"
+    },
+    {
+      "id": "arrowshot",
+      "weight": "3",
+      "videoUrl": "https://logcat.team/crosspromo/arrowshot.mp4",
+      "androidUrl": "https://assetstore.unity.com/packages/slug/320419",
+      "iosUrl": "https://assetstore.unity.com/packages/slug/320419"
+    }
+  ]
+}
