@@ -1,214 +1,268 @@
-  <!DOCTYPE html>
-  <html>
-  <head>
-
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Logcat Team</title>
-    <meta name="description" content="A team makes simple mobile games."/>
-    <meta name="keywords" content="Mobile games, free games, voodoo.io, lionstudios, ketchappgames, best free games, free android games, appstore, googleplay" />
-    <meta property="og:title" content="Logcat Team" />
-    <link rel="stylesheet" type="text/css" href="./css/standard-css-ski-ltr-ltr.css">
-
-    <style type="text/css">
-     @font-face {
-            font-family: 'Open Sans';
-            font-style: italic;
-            font-weight: 400;
-            src: local('Open Sans Italic'), local('OpenSans-Italic'), url(https://fonts.gstatic.com/s/opensans/v16/mem6YaGs126MiZpBA-UFUK0Udc1GAK6bt6o.woff2) format('woff2');
-            unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
-        }
-    body {
-      /* background: #f2f2e0; */
-      background: #ffffff;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Katplay</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #fff;
+      font-family: Arial, sans-serif;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background-color: #ff0051;
+      color: white;
+      padding: 2rem 1rem;
       text-align: center;
     }
-
-    hr { 
-    display: block;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-    margin-left: auto;
-    margin-right: auto;
-    border-style: inset;
-    border-width: 0.5px;
-  } 
-
-      hr2 { 
-    display: block;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-    margin-left: auto;
-    margin-right: auto;
-    border-style: inset;
-    border-width: 5.5px;
-  } 
-
-        .footer {
-           position: fixed;
-           left: 0;
-           bottom: 0;
-           width: 100%;
-           /* height: 100px; */
-           background-color: #d3d3d3;
-           color: rgb(0, 0, 0);
-           text-align: center;
-        } 
-
-                infoText {
-            color: #fff;
-            font-size: 18px;
-        }
-
-        #box-item-game {
-            width: 404px;
-            text-align: center;
-            margin: 0px auto 40px;
-            padding: 0px 0px 0px 0px;
-            border-width: 1px 1px 1px 1px;
-            border-color: #e2e2e2;
-            border-style: solid;
-            background-color: #ffffff;
-        }
-
-        .article-image img {
-            width: 400px;
-        }
-
-        .article-badge {
-            text-align: center;
-        }
-
-        #box-item-game h1 {
-            font-family: unset;
-            text-align: center;
-        }
-
-        .article-badge img {
-            width: 60px;
-            margin-left:25px;
-            margin-right:25px;
-            margin-bottom:15px;
-            /* margin: 25px; */
-        }
-
+    header a {
+      color: white;
+      text-decoration: underline;
+      transition: color 0.3s ease;
+    }
+    header a:hover {
+      color: #ff80a0;
+    }
+    main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+      animation: fadeIn 1s ease forwards;
+      opacity: 0;
+    }
+    main ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 1rem 0;
+    }
+    main ul li {
+      margin: 0.3rem 0;
+    }
+    form {
+      text-align: left;
+      margin-top: 2rem;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    input[type="text"], input[type="email"], textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1rem;
+      resize: vertical;
+      transition: border-color 0.3s ease;
+    }
+    input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+      border-color: #ff0051;
+      outline: none;
+    }
+    textarea {
+      min-height: 100px;
+    }
+    input[type="submit"] {
+      margin-top: 1.5rem;
+      background-color: #ff0051;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      font-size: 1rem;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 4px 8px rgb(255 0 81 / 0.3);
+    }
+    input[type="submit"]:hover:not(:disabled) {
+      background-color: #ff3380;
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgb(255 0 81 / 0.5);
+    }
+    input[type="submit"]:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+      box-shadow: none;
+      transform: none;
+    }
+    footer {
+      background: #f8f8f8;
+      padding: 10px 0;
+      font-size: 14px;
+      color: #555;
+      margin-top: auto;
+    }
+    .footer-container {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      text-align: center;
+    }
+    .footer-item {
+      white-space: nowrap;
+    }
+    .separator {
+      user-select: none;
+      color: #999;
+    }
+    footer a {
+      color: #555;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    footer a:hover {
+      text-decoration: underline;
+      color: #ff0051;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+    @media (max-width: 600px) {
+      .footer-container {
+        flex-direction: column;
+        gap: 5px;
+      }
+      .separator {
+        display: none;
+      }
+      header {
+        padding: 1.5rem 1rem;
+        font-size: 1.1rem;
+      }
+      header h1 {
+        font-size: 1.8rem;
+      }
+      header p {
+        font-size: 1.1rem;
+      }
+      main {
+        padding: 1.5rem 1rem;
+      }
+      main h2 {
+        font-size: 1.4rem;
+        margin-bottom: 1rem;
+      }
+      main p {
+        font-size: 1.1rem;
+        margin-bottom: 1rem;
+      }
+      a {
+        font-size: 1.1rem;
+      }
+    }
   </style>
-
 </head>
-
 <body>
-  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
-  <!-- <meta name="viewport" content="width=device-width, initial-scale=0.86, maximum-scale=3.0, minimum-scale=0.86"> -->
-  <br>
-  <br>
-  <br>
-  <!-- <br> -->
-  <!-- <br> -->
-  <!-- <br> -->
-  <!-- <br> -->
-  <!-- <br> -->
-  <!-- <br>
-  <br>
-  <br>
-  <br>
-  <br> -->
-  <div style="display:block;text-align:center;margin-right:auto;margin-left:auto">
-   <a imageanchor="1"><img border="0" src="./imgs/locatteam_logo.png" style="zoom: 0.6;"></a>
- </div>
-</div>
-<!-- <br> -->
-<!-- <br> -->
-<!-- <br> -->
-<!-- <br> -->
-<!-- <hr> -->
-<div style="display:block;text-align:center;margin-right:auto;margin-left:auto"><font color="#555555" size="3">CONTACT LOGCAT TEAM: <a href="mailto:hifromlogcat@gmail.com" style="color:#0400ff">hifromlogcat@gmail.com</a></font></div>
-<div style="display:block;text-align:center;margin-right:auto;margin-left:auto">
-<hr>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <!-- <hr> -->
-  <!-- <div style="display:block;text-align:center;margin-right:auto;margin-left:auto"><font color="#555555" size="4">GooglePlay Store:</font>
-  </div> -->
-  <br>
-  <!-- <br> -->
-  <!-- <div> -->
-      <!-- <a href="https://itunes.apple.com/us/developer/id1299762752" target="_blank" alt="appstore"> <img src="./imgs/appstore.png" style="zoom: 0.75;"> -->
-      <!-- <a href="https://play.google.com/store/apps/developer?id=Logcat+Team" target="_blank" alt="playstore"> <img src="./imgs/playstore.png" style="zoom: 0.75;"></a> -->
-  <!-- </div> -->
-  <!-- <br> -->
-  <!-- <br> -->
-  <br>
-  <div style="display:block;text-align:center;margin-right:auto;margin-left:auto"><font color="#000000" size="5">Our Games:</font>
-  </div>
-  <br>
-  <br>
-  <br>
-  <!-- <div>
-      <a href="https://logcat.team/get13puzzle/" target="_blank" alt="playstore"> <img src="./imgs/get13_icon.png" style="zoom: 0.5;"></a>
-  </div> -->
-      <div id="box-item-game">
-        <div class="article-image">
-            <a target="_blank" alt="Get13Puzzle"> <img src="./imgs/get13_icon.png">
-              <!-- <a href="https://logcat.team/get13puzzle/" target="_blank" alt="Get13Puzzle"> <img src="./imgs/get13_icon.png"> -->
-            </a>
-        </div>
-        <h1>Get 13 Puzzle</h1>
-        <div class="article-badge">
-            <a href="https://play.google.com/store/apps/details?id=com.lgame.get13puzzle" target="_blank" alt="Get13Puzzle"> <img src="./imgs/playstore_circle.png"></a>
-            <a href="https://logcat.team/get13puzzle/" target="_blank" alt="Get13Puzzle"> <img src="./imgs/webstore_circle.png" ></a>
-        </div>
-    </div>
+  <header>
+    <h1>Welcome to Katplay</h1>
+    <p><em>Born to Kat, built to play.</em></p>
+    <p><a href="https://play.google.com/store/apps/developer?id=katplay" target="_blank" rel="noopener noreferrer">Visit Katplay's Google Play Store</a></p>
+  </header>
 
-          <div id="box-item-game">
-        <div class="article-image">
-            <a target="_blank" alt="TicTacToe"> <img src="./imgs/tictactoe_icon.png">
-              <!-- <a href="https://logcat.team/get13puzzle/" target="_blank" alt="Get13Puzzle"> <img src="./imgs/get13_icon.png"> -->
-            </a>
-        </div>
-        <h1>TicTacToe Online</h1>
-        <div class="article-badge">
-            <!-- <a href="https://play.google.com/store/apps/details?id=com.lgame.get13puzzle" target="_blank" alt="Get13Puzzle"> <img src="./imgs/playstore_circle.png"></a> -->
-            <a href="https://logcat.team/tictactoe/" target="_blank" alt="TicTacToe"> <img src="./imgs/webstore_circle.png" ></a>
-        </div>
-    </div>
+  <main>
+    <h2><strong>We build, we play, we reskin.</strong></h2>
+    <p>
+      Katplay is an indie team creating hyper-casual and casual mobile games with Unity.<br />
+      We focus on:
+    </p>
+    <ul>
+      <li>• Fast prototypes</li>
+      <li>• Full game development</li>
+      <li>• Playable ads</li>
+      <li>• Game reskin for Unity projects</li>
+    </ul>
+    <p>
+      We’ve collaborated with publishers like Voodoo, Lion Studios, Homa Games, ZPlay, and OneSoft — with games reaching millions of downloads.
+    </p>
+    <p><strong>Got an idea? Need a reskin?<br />Let’s make it playable.</strong></p>
 
-    <div id="box-item-game">
-      <div class="article-image">
-          <a target="_blank" alt="Get13Puzzle"> <img src="./imgs/locatteam_logo.png">
-            <!-- <a href="https://logcat.team/get13puzzle/" target="_blank" alt="Get13Puzzle"> <img src="./imgs/get13_icon.png"> -->
-          </a>
+    <h2>Contact Us</h2>
+    <form id="contactForm">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required placeholder="Your Name" />
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required placeholder="your.email@example.com" />
+
+      <label for="message">Message:</label>
+      <textarea id="message" name="message" required placeholder="Write your message here..."></textarea>
+
+      <input type="submit" value="Send Message" />
+    </form>
+  </main>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-item footer-left">
+        &copy; 2025 Katplay
       </div>
-      <h1>Coming Soon!</h1>
-      <!-- <div class="article-badge">
-          <a href="https://play.google.com/store/apps/details?id=com.lgame.get13puzzle" target="_blank" alt="Get13Puzzle"> <img src="./imgs/playstore_circle.png"></a>
-          <a href="https://logcat.team/get13puzzle/" target="_blank" alt="Get13Puzzle"> <img src="./imgs/webstore_circle.png" ></a>
-      </div> -->
-  </div>
+      <div class="separator">|</div>
+      <div class="footer-item footer-center">
+        <a href="https://katplay.fun/privacy/" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+      </div>
+      <div class="separator">|</div>
+      <div class="footer-item footer-right">
+        Contact: 
+                <a href="mailto:hellokatplay@gmail.com">hellokatplay@gmail.com</a>
+<!--         <a href="mailto:hellokatplay@gmail.com">hellokatplay@gmail.com</a> or 
+        <a href="https://t.me/katplaydotfun" target="_blank" rel="noopener noreferrer">Telegram @katplaydotfun</a> -->
+      </div>
+    </div>
+  </footer>
 
-  </div>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <br>
-  <!-- <hr> -->
-</div>
+  <script>
+    const form = document.getElementById('contactForm');
+    const submitBtn = form.querySelector('input[type="submit"]');
 
-<div class="footer">
-  <!-- <br> -->
-  <br>
-  <!-- <div id="footer-info">©2025 LogcatTeam • <a href="http://logcat.team/privacy.html"> Privacy Policy</a> • <a href="http://logcat.team/terms.html"> Terms & Conditions</a> -->
-  <div <a href="http://logcat.team/"> ©2025 LogcatTeam</a> • <a href="http://logcat.team/privacy.html"> Privacy Policy</a> • <a href="http://logcat.team/terms.html"> Terms & Conditions</a>
-  <br>
-  <!-- <br> -->
-  <br>
-  </div>
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const name = this.name.value.trim();
+      const email = this.email.value.trim();
+      const message = this.message.value.trim();
+
+      if (!name || !email || !message) {
+        alert('Please fill all the fields.');
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.value = 'Sending...';
+
+      fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {
+        method: 'POST',
+        body: JSON.stringify({ name, email, message }),
+        headers: { 'Content-Type': 'application/json' }
+      })
+        .then(response => response.text())
+        .then(data => {
+          alert('Thank you, ' + name + '! Your message has been received.');
+          form.reset();
+          submitBtn.disabled = false;
+          submitBtn.value = 'Send Message';
+        })
+        .catch(error => {
+          alert('Error sending message. Please try again.');
+          submitBtn.disabled = false;
+          submitBtn.value = 'Send Message';
+        });
+    });
+  </script>
 </body>
 </html>
