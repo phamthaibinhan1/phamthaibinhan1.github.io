@@ -3,16 +3,19 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <!-- Start loading assets right away, to have them (partly) loaded already when they are requested -->
-  <link rel="preload" href="Build//4c29b290cf0fc2a11acc0871ffa5dc18.data" as="fetch" type="application/octet-stream" crossorigin>
+  <link rel="preload" href="Build//a805df15f699eabdc1cc0a2b40e74454.data" as="fetch" type="application/octet-stream" crossorigin>
   <link rel="preload" href="Build/23c0b17189d8b076776e7053d7fd1003.framework.js" as="script">
-  <link rel="preload" href="Build/d9d0a86a13241cf945ce2076c0d82b91.wasm" as="fetch" type="application/wasm" crossorigin>
+  <link rel="preload" href="Build/63bb6713d56d8ce3b761b5506db80895.wasm" as="fetch" type="application/wasm" crossorigin>
   <title>Snake Cube</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+
     * {
       padding: 0;
       margin: 0;
+      box-sizing: border-box;
     }
 
     html {
@@ -26,8 +29,11 @@
       height: -webkit-fill-available;
       width: 100%;
       text-align: center;
+      font-family: 'Outfit', sans-serif;
+      overflow: hidden;
     }
 
+    /* ─── Game Canvas Container ─── */
     #unity-container {
       position: absolute;
       left: 0px;
@@ -43,7 +49,7 @@
     #unity-canvas {
       width: 100%;
       height: 100%;
-      background-color: #fff;
+      background: linear-gradient(160deg, #c9d8f0 0%, #b8c8e8 40%, #a8b8d8 100%);
     }
 
     @media (min-aspect-ratio: 0.5) {
@@ -62,106 +68,248 @@
       }
     }
 
+    /* ─── Loading Overlay ─── */
     #unity-loading-container {
       position: absolute;
-      left: 0px;
-      top: 0px;
-      width: 100%;
-      height: 100%;
-      background-color: #fff;
+      inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      gap: 40px;
+      gap: 36px;
+
+      /* Match game background gradient */
+      background: linear-gradient(160deg, #c9d8f0 0%, #b8c8e8 40%, #a8b8d8 100%);
 
       opacity: 1;
       visibility: visible;
-      transition: 800ms linear;
+      transition: opacity 900ms ease, visibility 900ms ease;
+      z-index: 10;
     }
 
     #unity-loading-container.finished {
       opacity: 0;
-      visibility: collapse;
+      visibility: hidden;
     }
 
-    #unity-loading-container .logo {
-      /*width: 15%;*/
-      height: 40%;
+    /* ─── Logo ─── */
+    .loading-logo {
+      height: clamp(60px, 12vw, 100px);
+      animation: logoPulse 2.4s ease-in-out infinite;
+      filter: drop-shadow(0 8px 24px rgba(80, 120, 200, 0.25));
+    }
+
+    @keyframes logoPulse {
+      0%, 100% { transform: scale(1);   opacity: 1; }
+      50%       { transform: scale(1.04); opacity: 0.85; }
+    }
+
+    /* ─── Spinner Dots ─── */
+    .loading-dots {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .loading-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(80, 100, 160, 0.5);
+      animation: dotBounce 1.2s ease-in-out infinite;
+    }
+
+    .loading-dots span:nth-child(1) { animation-delay: 0s;    background: #e07060; }
+    .loading-dots span:nth-child(2) { animation-delay: 0.15s; background: #60a0d0; }
+    .loading-dots span:nth-child(3) { animation-delay: 0.30s; background: #60a0d0; }
+
+    @keyframes dotBounce {
+      0%, 80%, 100% { transform: scale(1);   opacity: 0.5; }
+      40%            { transform: scale(1.5); opacity: 1; }
+    }
+
+    /* ─── Progress Bar ─── */
+    .progress-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      width: clamp(200px, 50vw, 320px);
     }
 
     #unity-loading-bar {
       position: relative;
-      width: 40%;
-      height: 10px;
-      background-color: #fff;
-      border: 1px solid #ccc;
-      border-radius: 10px;
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 999px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(80, 100, 160, 0.15);
     }
 
     #unity-loading-bar-inner {
       position: absolute;
-      left: 0%;
-      top: 0%;
-      width: 1%;
+      left: 0;
+      top: 0;
+      width: 0%;
       height: 100%;
-      background-color: #ccc;
-      border-radius: 10px;
-      transition: 400ms linear;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #e07060 0%, #60a0d0 60%, #80c0f0 100%);
+      transition: width 300ms ease;
+      box-shadow: 0 0 10px rgba(96, 160, 208, 0.6);
+    }
+
+    /* Shimmer effect */
+    #unity-loading-bar-inner::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.5) 50%, transparent 100%);
+      animation: shimmer 1.5s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(200%); }
+    }
+
+    #loading-percent {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: rgba(60, 80, 130, 0.7);
+    }
+
+    /* ─── Error Screen ─── */
+    #unity-error-container {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, #c9d8f0 0%, #b8c8e8 40%, #a8b8d8 100%);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+      z-index: 20;
+    }
+
+    #unity-error-container.visible {
+      display: flex;
+    }
+
+    .error-icon {
+      font-size: 48px;
+    }
+
+    .error-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #c0392b;
+    }
+
+    .error-message {
+      font-size: 14px;
+      color: rgba(60, 80, 130, 0.8);
+      max-width: 300px;
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    .error-reload-btn {
+      margin-top: 8px;
+      padding: 10px 28px;
+      border-radius: 999px;
+      border: none;
+      background: linear-gradient(135deg, #e07060, #c0504a);
+      color: white;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(224, 112, 96, 0.4);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .error-reload-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(224, 112, 96, 0.5);
     }
   </style>
 </head>
 
 <body>
+  <!-- Game Canvas -->
   <div id="unity-container">
     <canvas id="unity-canvas"></canvas>
   </div>
+
+  <!-- Loading Screen -->
   <div id="unity-loading-container">
-    <img src="logo.png" class="logo" alt="Logo Good">
-<!--     <div id="unity-loading-bar">
-      <div id="unity-loading-bar-inner"></div>
-    </div> -->
+    <img src="logo.png" class="loading-logo" alt="Goodia">
+    <div class="loading-dots">
+      <span></span><span></span><span></span>
+    </div>
+    <div class="progress-wrap">
+      <div id="unity-loading-bar">
+        <div id="unity-loading-bar-inner"></div>
+      </div>
+      <span id="loading-percent">0%</span>
+    </div>
   </div>
-  <script src="Build/d120bf6f6a51c8977fb33fed36e46e61.loader.js"></script>
+
+  <!-- Error Screen -->
+  <div id="unity-error-container">
+    <div class="error-icon">😢</div>
+    <div class="error-title">Failed to load game</div>
+    <div class="error-message" id="unity-error-message">
+      Something went wrong while loading. Please check your connection and try again.
+    </div>
+    <button class="error-reload-btn" onclick="location.reload()">Try Again</button>
+  </div>
+
   <script>
     var buildUrl = "Build";
-    var loaderUrl = buildUrl + "/d120bf6f6a51c8977fb33fed36e46e61.loader.js";
     var config = {
-      dataUrl: buildUrl + "/4c29b290cf0fc2a11acc0871ffa5dc18.data",
-      frameworkUrl: buildUrl + "/23c0b17189d8b076776e7053d7fd1003.framework.js",
-      codeUrl: buildUrl + "/d9d0a86a13241cf945ce2076c0d82b91.wasm",
+      dataUrl:          buildUrl + "/a805df15f699eabdc1cc0a2b40e74454.data",
+      frameworkUrl:     buildUrl + "/23c0b17189d8b076776e7053d7fd1003.framework.js",
+      codeUrl:          buildUrl + "/63bb6713d56d8ce3b761b5506db80895.wasm",
       streamingAssetsUrl: "StreamingAssets",
-      companyName: "Good",
-      productName: "Snake Cube",
-      productVersion: "1.0.0",
+      companyName:   "Good",
+      productName:   "Snake Cube",
+      productVersion:"1.0.0",
     };
 
+    // Limit pixel ratio on mobile to avoid heavy rendering
     var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    if(isMobile) {
-      // Define a maximum pixel ratio for mobile to avoid rendering at too high resolutions
-      const maxPixelRatioMobile = 2.0;
-      config.devicePixelRatio = Math.min(window.devicePixelRatio, maxPixelRatioMobile);
+    if (isMobile) {
+      config.devicePixelRatio = Math.min(window.devicePixelRatio, 2.0);
     }
 
-    var canvas = document.querySelector("#unity-canvas");
+    var canvas           = document.querySelector("#unity-canvas");
     var loadingContainer = document.querySelector("#unity-loading-container");
-    // var loadingBar = document.querySelector("#unity-loading-bar-inner");
+    var loadingBar       = document.querySelector("#unity-loading-bar-inner");
+    var loadingPercent   = document.querySelector("#loading-percent");
+    var errorContainer   = document.querySelector("#unity-error-container");
+    var errorMessage     = document.querySelector("#unity-error-message");
 
-    var unityGame;
     var script = document.createElement("script");
-    script.src = loaderUrl;
-    script.onload = function() {
-      createUnityInstance(canvas, config, function(progress) {
-        // loadingBar.style.width = 100 * progress + "%";
-      }).then(function(unityInstance) {
-        unityGame = unityInstance;
+    script.src = buildUrl + "/b020715e2a939c25f303ddb2bba62308.loader.js";
+    script.onload = function () {
+      createUnityInstance(canvas, config, function (progress) {
+        var pct = Math.round(progress * 100);
+        loadingBar.style.width = pct + "%";
+        loadingPercent.textContent = pct + "%";
+      }).then(function (unityInstance) {
         loadingContainer.classList.add("finished");
-      }).catch(function(message) {
-        alert(message);
+      }).catch(function (message) {
+        errorMessage.textContent = message || "An unknown error occurred.";
+        loadingContainer.style.display = "none";
+        errorContainer.classList.add("visible");
       });
     };
     document.body.appendChild(script);
   </script>
+
   <!-- Parse Unity rich text to render stylized browser console logs -->
   <script src="./pretty-console.js"></script>
 </body>
