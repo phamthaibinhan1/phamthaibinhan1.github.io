@@ -5,9 +5,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
   <!-- Start loading assets right away, to have them (partly) loaded already when they are requested -->
-  <link rel="preload" href="Build/30dd73092ad5f98eec3b9d6da0fa7200.data" as="fetch" type="application/octet-stream" crossorigin>
+  <link rel="preload" href="Build/dc0807878d9834ff6914642b58407245.data" as="fetch" type="application/octet-stream" crossorigin>
   <link rel="preload" href="Build/23c0b17189d8b076776e7053d7fd1003.framework.js" as="script">
-  <link rel="preload" href="Build/63bb6713d56d8ce3b761b5506db80895.wasm" as="fetch" type="application/wasm" crossorigin>
+  <link rel="preload" href="Build/2e4afe9102dae63cc3138e39079776c4.wasm" as="fetch" type="application/wasm" crossorigin>
   <title>Snake Cube</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
@@ -50,32 +50,37 @@
       background: linear-gradient(160deg, #c9d8f0 0%, #b8c8e8 40%, #a8b8d8 100%);
     }
 
-    /* Default values, might be overwritten by aspect ratio media queries */
+    /* Fill normally; outside the supported desktop aspect range, fit the
+       limiting viewport dimension so the canvas never overflows. */
     #unity-canvas {
       width: 100%;
       height: 100%;
+      display: block;
+      flex: none;
+      min-width: 0;
+      min-height: 0;
       background: linear-gradient(160deg, #c9d8f0 0%, #b8c8e8 40%, #a8b8d8 100%);
     }
 
     @media (max-aspect-ratio: 0.5) {
       #unity-canvas {
-        width: auto;
-        height: 100%;
+        width: 100%;
+        height: auto;
         aspect-ratio: 0.5;
       }
     }
 
     @media (min-aspect-ratio: 0.75) {
       #unity-canvas {
-        width: 100%;
-        height: auto;
+        width: auto;
+        height: 100%;
         aspect-ratio: 0.75;
       }
     }
 
-    /* Phones/tablets fill the available web viewport instead of letterboxing.
-       Unity resizes its drawing buffer from the canvas CSS size. */
-    @media (hover: none) and (pointer: coarse) {
+    /* Fill touch devices only in portrait. In landscape, keep the portrait
+       aspect-limited canvas centered, just like desktop. */
+    @media (hover: none) and (pointer: coarse) and (orientation: portrait) {
       #unity-canvas {
         width: 100%;
         height: 100%;
@@ -288,9 +293,9 @@
   <script>
     var buildUrl = "Build";
     var config = {
-      dataUrl:          buildUrl + "/30dd73092ad5f98eec3b9d6da0fa7200.data",
+      dataUrl:          buildUrl + "/dc0807878d9834ff6914642b58407245.data",
       frameworkUrl:     buildUrl + "/23c0b17189d8b076776e7053d7fd1003.framework.js",
-      codeUrl:          buildUrl + "/63bb6713d56d8ce3b761b5506db80895.wasm",
+      codeUrl:          buildUrl + "/2e4afe9102dae63cc3138e39079776c4.wasm",
       streamingAssetsUrl: "StreamingAssets",
       companyName:   "Good",
       productName:   "Snake Cube",
@@ -383,7 +388,7 @@
     }
 
     var script = document.createElement("script");
-    script.src = buildUrl + "/b020715e2a939c25f303ddb2bba62308.loader.js";
+    script.src = buildUrl + "/bb2dda99b041118aff8805a7352a14b9.loader.js";
     script.onload = function () {
       createUnityInstance(canvas, config, function (progress) {
         // Show up to 90%; the remaining 10% fills when canvas goes live.
