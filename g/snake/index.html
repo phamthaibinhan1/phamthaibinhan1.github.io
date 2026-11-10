@@ -3,9 +3,9 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
   <!-- Start loading assets right away, to have them (partly) loaded already when they are requested -->
-  <link rel="preload" href="Build//3393830efb2ffb360bd0dec14116d5a9.data" as="fetch" type="application/octet-stream" crossorigin>
+  <link rel="preload" href="Build//f8d6b2f9d7568e8c0a6f044381432962.data" as="fetch" type="application/octet-stream" crossorigin>
   <link rel="preload" href="Build/23c0b17189d8b076776e7053d7fd1003.framework.js" as="script">
   <link rel="preload" href="Build/63bb6713d56d8ce3b761b5506db80895.wasm" as="fetch" type="application/wasm" crossorigin>
   <title>Snake Cube</title>
@@ -19,30 +19,35 @@
     }
 
     html {
-      /* fix mobile viewport menu bar on iOS */
-      height: -webkit-fill-available;
+      /* Dùng 100% thay vì fill-available ở html để body inherit đúng */
+      height: 100%;
     }
 
     body {
-      height: 100%;
-      /* fix mobile viewport menu bar on iOS */
-      height: -webkit-fill-available;
+      /* Thứ tự ưu tiên: dvh (dynamic, trừ browser chrome) → fill-available → 100% */
+      height: 100vh;
+      height: 100dvh;              /* iOS 15.4+, Chrome 108+ — trừ đi address bar */
+      height: -webkit-fill-available; /* iOS Safari fallback */
       width: 100%;
       text-align: center;
       font-family: 'Outfit', sans-serif;
       overflow: hidden;
+      /* Letterbox background = màu game, không bao giờ trắng */
+      background: linear-gradient(160deg, #c9d8f0 0%, #b8c8e8 40%, #a8b8d8 100%);
     }
 
     /* ─── Game Canvas Container ─── */
     #unity-container {
-      position: absolute;
-      left: 0px;
-      top: 0px;
-      width: 100%;
-      height: 100%;
+      position: fixed;              /* fixed thay vì absolute — tránh bị đẩy bởi scroll bounce */
+      inset: 0;
+      /* Respect notch / home-indicator trên iPhone */
+      padding: env(safe-area-inset-top) env(safe-area-inset-right)
+               env(safe-area-inset-bottom) env(safe-area-inset-left);
       display: flex;
       align-items: center;
       justify-content: center;
+      /* Mặc định dùng gradient game; bị override nếu Unity set CONTAINER_BACKGROUND_COLOR */
+      background: linear-gradient(160deg, #c9d8f0 0%, #b8c8e8 40%, #a8b8d8 100%);
     }
 
     /* Default values, might be overwritten by aspect ratio media queries */
@@ -270,13 +275,16 @@
   <script>
     var buildUrl = "Build";
     var config = {
-      dataUrl:          buildUrl + "/3393830efb2ffb360bd0dec14116d5a9.data",
+      dataUrl:          buildUrl + "/f8d6b2f9d7568e8c0a6f044381432962.data",
       frameworkUrl:     buildUrl + "/23c0b17189d8b076776e7053d7fd1003.framework.js",
       codeUrl:          buildUrl + "/63bb6713d56d8ce3b761b5506db80895.wasm",
       streamingAssetsUrl: "StreamingAssets",
       companyName:   "Good",
       productName:   "Snake Cube",
       productVersion:"1.0.0",
+      // Required to allow readPixels() on the WebGL canvas.
+      // Slight perf cost (~5% on some GPUs) but only active during loading.
+      webglContextAttributes: { preserveDrawingBuffer: true },
     };
 
     // Limit pixel ratio on mobile to avoid heavy rendering
@@ -292,15 +300,62 @@
     var errorContainer   = document.querySelector("#unity-error-container");
     var errorMessage     = document.querySelector("#unity-error-message");
 
+    // ─────────────────────────────────────────────────────────────────
+    // Pure-JS detection: poll the canvas pixels every rAF frame.
+    // Unity renders the splash screen (and game) directly onto the
+    // WebGL canvas. We sample the center pixel; once it becomes
+    // non-black (i.e. the game background colour is visible) we know
+    // the splash / init is done and we can safely hide the overlay.
+    // No C# code or game modifications required.
+    // ─────────────────────────────────────────────────────────────────
+    function waitForCanvasContent(gl, onReady) {
+      var buf = new Uint8Array(4);
+      var cx  = Math.floor(canvas.width  / 2);
+      var cy  = Math.floor(canvas.height / 2);
+      // Safety cap: hide after 12 s regardless (edge-case guard)
+      var deadline = Date.now() + 12000;
+
+      function check() {
+        gl.readPixels(cx, cy, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, buf);
+        // Any non-trivial brightness in R, G, or B means game is rendering
+        var bright = buf[0] > 20 || buf[1] > 20 || buf[2] > 20;
+        if (bright || Date.now() > deadline) {
+          onReady();
+        } else {
+          requestAnimationFrame(check);
+        }
+      }
+      requestAnimationFrame(check);
+    }
+
+    function hideLoadingScreen() {
+      loadingBar.style.width  = "100%";
+      loadingPercent.textContent = "100%";
+      setTimeout(function () {
+        loadingContainer.classList.add("finished");
+      }, 300);
+    }
+
     var script = document.createElement("script");
     script.src = buildUrl + "/b020715e2a939c25f303ddb2bba62308.loader.js";
     script.onload = function () {
       createUnityInstance(canvas, config, function (progress) {
-        var pct = Math.round(progress * 100);
-        loadingBar.style.width = pct + "%";
+        // Show up to 90%; the remaining 10% fills when canvas goes live.
+        var pct = Math.min(Math.round(progress * 100), 90);
+        loadingBar.style.width  = pct + "%";
         loadingPercent.textContent = pct + "%";
       }).then(function (unityInstance) {
-        loadingContainer.classList.add("finished");
+        // Engine initialised (splash may or may not have played yet).
+        // Grab the WebGL context and start pixel-polling.
+        loadingBar.style.width  = "90%";
+        loadingPercent.textContent = "90%";
+        var gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
+        if (gl) {
+          waitForCanvasContent(gl, hideLoadingScreen);
+        } else {
+          // Fallback: no WebGL context available, hide after short delay
+          setTimeout(hideLoadingScreen, 500);
+        }
       }).catch(function (message) {
         errorMessage.textContent = message || "An unknown error occurred.";
         loadingContainer.style.display = "none";
