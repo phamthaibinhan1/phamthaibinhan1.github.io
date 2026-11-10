@@ -302,24 +302,47 @@
 
     // ─────────────────────────────────────────────────────────────────
     // Pure-JS detection: poll the canvas pixels every rAF frame.
-    // Unity renders the splash screen (and game) directly onto the
-    // WebGL canvas. We sample the center pixel; once it becomes
-    // non-black (i.e. the game background colour is visible) we know
-    // the splash / init is done and we can safely hide the overlay.
-    // No C# code or game modifications required.
+    //
+    // Vấn đề nếu chỉ check "non-black":
+    //   Unity splash bg ≈ RGB(35,31,32) → tối, nhưng logo Unity trắng
+    //   → pixel trắng trigger sớm → loading ẩn, lộ splash ❌
+    //
+    // Fix: check màu XANH LAM đặc trưng của game background.
+    //   Game bg ≈ RGB(185–210, 200–220, 225–245) → blue dominant & sáng
+    //   Unity splash logo: white (R≈G≈B cao), bg: dark (R≈G≈B thấp)
+    //   → chỉ pass khi blue channel cao VÀ chiếm ưu thế hơn red
     // ─────────────────────────────────────────────────────────────────
     function waitForCanvasContent(gl, onReady) {
       var buf = new Uint8Array(4);
-      var cx  = Math.floor(canvas.width  / 2);
-      var cy  = Math.floor(canvas.height / 2);
-      // Safety cap: hide after 12 s regardless (edge-case guard)
-      var deadline = Date.now() + 12000;
+      var w = canvas.width, h = canvas.height;
+      // Sample 5 điểm: tâm + 4 góc lệch vào (tránh border)
+      var pts = [
+        [Math.floor(w * 0.5), Math.floor(h * 0.5)],
+        [Math.floor(w * 0.25), Math.floor(h * 0.25)],
+        [Math.floor(w * 0.75), Math.floor(h * 0.25)],
+        [Math.floor(w * 0.25), Math.floor(h * 0.75)],
+        [Math.floor(w * 0.75), Math.floor(h * 0.75)],
+      ];
+      // Safety cap: ẩn sau 15 s dù sao đi nữa
+      var deadline = Date.now() + 15000;
+
+      function isGameColor(r, g, b) {
+        // Game background: blue-dominant, moderately bright
+        // R ≈ 170-215, G ≈ 185-225, B ≈ 210-245
+        // Key rule: B > R+15 (blue dominant) AND B > 150 (bright enough)
+        // Unity splash white logo: R≈G≈B≈255 → B-R ≈ 0, không pass
+        // Unity splash dark bg:    R≈G≈B≈35  → B < 150, không pass
+        return b > 150 && (b - r) > 15;
+      }
 
       function check() {
-        gl.readPixels(cx, cy, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, buf);
-        // Any non-trivial brightness in R, G, or B means game is rendering
-        var bright = buf[0] > 20 || buf[1] > 20 || buf[2] > 20;
-        if (bright || Date.now() > deadline) {
+        var matchCount = 0;
+        for (var i = 0; i < pts.length; i++) {
+          gl.readPixels(pts[i][0], pts[i][1], 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, buf);
+          if (isGameColor(buf[0], buf[1], buf[2])) matchCount++;
+        }
+        // Cần ít nhất 3/5 điểm match → tránh false positive từ 1 pixel lẻ
+        if (matchCount >= 3 || Date.now() > deadline) {
           onReady();
         } else {
           requestAnimationFrame(check);
